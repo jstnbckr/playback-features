@@ -1,5 +1,6 @@
 package com.netflix.playback.features.model;
 
+import com.netflix.common.EventSubscriber;
 import com.netflix.common.SynchronizedEventBus;
 
 /**
@@ -15,6 +16,7 @@ import com.netflix.common.SynchronizedEventBus;
  * @author tom
  *
  */
+// TODO: Split this into an ABC and synchronous subclass
 public class KeyLogger {
   /**
    * Handler interface for KeyLogger handlers. Any class wishing
@@ -51,20 +53,20 @@ public class KeyLogger {
   }
   
   /**
-   * A subclass of {@link SynchronizedEventBus.EventSubscriber} which 
+   * A subclass of {@link EventSubscriber} which 
    * simply translates {@link SynchronizedEventBus} callbacks in to 
    * handler calls.
    * @author tom
    *
    */
-  private class EventSubscriber implements SynchronizedEventBus.EventSubscriber<KeyLogger.Event> {
+  private class Subscriber implements EventSubscriber<KeyLogger.Event> {
     private final Handler handler;
     
     /**
      * Instantiates the subscriber.
      * @param handler the handler to be wrapped.
      */
-    private EventSubscriber(Handler handler) {
+    private Subscriber(Handler handler) {
       this.handler = handler;
     }
     
@@ -81,7 +83,7 @@ public class KeyLogger {
    * @param handler the handler
    */
   public void addHandler(Handler handler) {
-    this.eventBus.addSubscriber(new KeyLogger.EventSubscriber(handler));
+    this.eventBus.addSubscriber(new KeyLogger.Subscriber(handler));
   }
   
   /**

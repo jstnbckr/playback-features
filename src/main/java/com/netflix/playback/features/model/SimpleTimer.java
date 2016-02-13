@@ -3,6 +3,7 @@ package com.netflix.playback.features.model;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
+import com.netflix.common.EventSubscriber;
 import com.netflix.common.SynchronizedEventBus;
 
 /**
@@ -17,12 +18,12 @@ public class SimpleTimer extends Timer {
   private class Event {}
   
   /**
-   * {@link SynchronizedEventBus.EventSubscriber} implementation which simply
+   * {@link EventSubscriber} implementation which simply
    * forwards the received event notification to the provided {@link PeriodCompletedCallback}. 
    * @author tom
    *
    */
-  private class EventSubscriber implements SynchronizedEventBus.EventSubscriber<SimpleTimer.Event> {
+  private class Subscriber implements EventSubscriber<SimpleTimer.Event> {
     private final PeriodCompletedCallback callback;
     
     /**
@@ -30,7 +31,7 @@ public class SimpleTimer extends Timer {
      * @param callback the {@link PeriodCompletedCallback} to be invoked in response to
      *        events being received by this subscriber.
      */
-    public EventSubscriber(PeriodCompletedCallback callback) {
+    public Subscriber(PeriodCompletedCallback callback) {
       this.callback = callback;
     }
     
@@ -67,7 +68,7 @@ public class SimpleTimer extends Timer {
 
   @Override
   public void addCallback(PeriodCompletedCallback callback) {
-    this.eventBus.addSubscriber(new SimpleTimer.EventSubscriber(callback));
+    this.eventBus.addSubscriber(new SimpleTimer.Subscriber(callback));
   }
 
   @Override

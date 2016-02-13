@@ -10,7 +10,7 @@ public class SynchronizedEventBusTest {
 
   private class FakeEvent {}
   
-  private class FakeSubscriber implements SynchronizedEventBus.EventSubscriber<FakeEvent> {
+  private class FakeSubscriber implements EventSubscriber<FakeEvent> {
     private int callCount = 0;
     
     @Override
