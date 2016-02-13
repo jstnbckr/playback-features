@@ -16,12 +16,19 @@ public abstract class Timer {
      * Start the timer.
      */
     public abstract void start();
+    
     /**
      * @param callback to be executed after each period completed.
      */
     public abstract void addCallback(PeriodCompletedCallback callback);
+    
     /**
      * Stop the timer.
      */
     public abstract void stop();
+    
+    /**
+     * @return true if the timer is currently running
+     */
+    public abstract boolean isRunning();
 }
