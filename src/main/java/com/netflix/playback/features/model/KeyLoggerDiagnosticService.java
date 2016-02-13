@@ -12,9 +12,10 @@ import java.util.Deque;
  */
 public final class KeyLoggerDiagnosticService extends DiagnosticService {
   
-  private KeyCounter allPeriodsCounter = new KeyCounter();
-  private Deque<KeyCounter> previousPeriodCounters = new ArrayDeque<KeyCounter>();
+  private final KeyCounter allPeriodsCounter = new KeyCounter();
+  private final Deque<KeyCounter> previousPeriodCounters = new ArrayDeque<KeyCounter>();
   private KeyCounter currentPeriodCounter = new KeyCounter();
+  private final KeyLogger keyLogger;
   
   /**
    * Instantiates the service, registering itself for timer callbacks
@@ -25,7 +26,7 @@ public final class KeyLoggerDiagnosticService extends DiagnosticService {
    */
   public KeyLoggerDiagnosticService(Timer timer, KeyLogger keyLogger) {
     super(timer, 0);
-    
+    this.keyLogger = keyLogger;
     keyLogger.addHandler(new KeyLogger.Handler() {
       
       @Override
@@ -104,5 +105,19 @@ public final class KeyLoggerDiagnosticService extends DiagnosticService {
       return 0;
     }
     return allPeriodsCounter.getCount(key) / this.numCompletedPeriods;
+  }
+
+  /**
+   * @return the key logger in use by this object.
+   */
+  public KeyLogger getKeyLogger() {
+    return this.keyLogger;
+  }
+  
+  /**
+   * @return the timer used by this object to signal period intervals.
+   */
+  public Timer getTimer() {
+    return this.timer;
   }
 }
