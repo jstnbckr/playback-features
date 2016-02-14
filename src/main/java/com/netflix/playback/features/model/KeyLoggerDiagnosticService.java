@@ -27,7 +27,7 @@ public final class KeyLoggerDiagnosticService extends DiagnosticService {
   public KeyLoggerDiagnosticService(Timer timer, KeyLogger keyLogger) {
     super(timer, 0);
     this.keyLogger = keyLogger;
-    keyLogger.addHandler(new KeyLogger.Handler() {
+    keyLogger.addHandler(new KeyLoggerHandler() {
       
       @Override
       public void handle(String... keys) {

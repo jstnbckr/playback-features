@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class FakeKeyLoggerHandler implements KeyLogger.Handler {
+public class FakeKeyLoggerHandler implements KeyLoggerHandler {
   public final List<String> allKeys = new ArrayList<String>();
   
   @Override

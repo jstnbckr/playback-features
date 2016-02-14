@@ -19,21 +19,6 @@ import com.netflix.common.SynchronizedEventBus;
 // TODO: Split this into an ABC and synchronous subclass
 public class KeyLogger {
   /**
-   * Handler interface for KeyLogger handlers. Any class wishing
-   * to register as a handler of KeyLogger keys must implement
-   * this interface.
-   * @author tom
-   *
-   */
-  public interface Handler {
-    /**
-     * Handles an array of string keys.
-     * @param key array of strings
-     */
-    public void handle(String... keys);
-  }
-  
-  /**
    * Private Event class used to wrap a logged set of 
    * string keys in such away that they can be published
    * to subscribers via the {@link SynchronizedEventBus}. 
@@ -60,13 +45,13 @@ public class KeyLogger {
    *
    */
   private class Subscriber implements EventSubscriber<KeyLogger.Event> {
-    private final Handler handler;
+    private final KeyLoggerHandler handler;
     
     /**
      * Instantiates the subscriber.
      * @param handler the handler to be wrapped.
      */
-    private Subscriber(Handler handler) {
+    private Subscriber(KeyLoggerHandler handler) {
       this.handler = handler;
     }
     
@@ -82,7 +67,7 @@ public class KeyLogger {
    * Registers the given handler to receive all subsequent logged keys.
    * @param handler the handler
    */
-  public void addHandler(Handler handler) {
+  public void addHandler(KeyLoggerHandler handler) {
     this.eventBus.addSubscriber(new KeyLogger.Subscriber(handler));
   }
   
