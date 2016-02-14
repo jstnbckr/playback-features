@@ -5,7 +5,7 @@ public abstract class DiagnosticService {
     protected Timer timer;
     protected int numCompletedPeriods;
     
-    public DiagnosticService(Timer timer, int numCompletedPeriods) {
+    public DiagnosticService(Timer timer) {
         this.timer = timer;
     }
     
