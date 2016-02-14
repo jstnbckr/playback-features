@@ -12,7 +12,7 @@ import java.util.Set;
  * @author tom
  *
  */
-public class KeyLoggerPlaybackDiagnostics extends PlaybackDiagnostics {
+public final class KeyLoggerPlaybackDiagnostics extends PlaybackDiagnostics {
   
   private static final String REQUEST_KEY = "request";
   private static final String UNIQUE_CUSTOMER_KEY = "uniqueCustomers";

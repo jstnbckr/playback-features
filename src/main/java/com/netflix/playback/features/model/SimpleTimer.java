@@ -13,7 +13,7 @@ import com.netflix.common.SynchronizedEventBus;
  * @author tom
  *
  */
-public class SimpleTimer extends Timer {
+public final class SimpleTimer extends Timer {
   
   private class Event {}
   

@@ -19,8 +19,7 @@ import com.netflix.common.SynchronizedEventBus;
  * @author tom
  *
  */
-// TODO: Split this into an ABC and synchronous subclass
-public class KeyLogger {
+public final class KeyLogger {
   /**
    * Private Event class used to wrap a logged set of 
    * string keys in such away that they can be published

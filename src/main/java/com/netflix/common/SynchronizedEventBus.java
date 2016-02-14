@@ -15,7 +15,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
  *
  * @param <T> the type of the events this bus will accept and propagate to subscribers
  */
-public class SynchronizedEventBus<T> {
+public final class SynchronizedEventBus<T> {
   
   // Use a CopyOnWriteArraySet to store the subscribers. This ensures we don't need to
   // synchronize access (optimizing for postEvent speed). Mutation is more expensive

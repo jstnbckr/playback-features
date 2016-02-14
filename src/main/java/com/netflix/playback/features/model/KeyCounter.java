@@ -14,7 +14,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author tom
  *
  */
-public class KeyCounter {
+public final class KeyCounter {
 
   private final Map<String, AtomicInteger> countMap = Collections.synchronizedMap(
       new HashMap<String, AtomicInteger>());
