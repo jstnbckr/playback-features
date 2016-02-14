@@ -44,6 +44,7 @@ public class SynchronizedEventBusTest {
     assertEquals(1, subB.callCount);
   }
   
+  @Test
   public void testAddSubscriberMultipleTimes() {
     FakeSubscriber subA = new FakeSubscriber();
     bus.addSubscriber(subA);
