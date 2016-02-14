@@ -106,18 +106,4 @@ public final class KeyLoggerDiagnosticService extends DiagnosticService {
     }
     return allPeriodsCounter.getCount(key) / this.numCompletedPeriods;
   }
-
-  /**
-   * @return the key logger in use by this object.
-   */
-  public KeyLogger getKeyLogger() {
-    return this.keyLogger;
-  }
-  
-  /**
-   * @return the timer used by this object to signal period intervals.
-   */
-  public Timer getTimer() {
-    return this.timer;
-  }
 }
