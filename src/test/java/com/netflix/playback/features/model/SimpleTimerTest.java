@@ -23,7 +23,7 @@ public class SimpleTimerTest {
   
   @Before
   public void setUp() throws Exception {
-    this.timer = new SimpleTimer(TimeUnit.MILLISECONDS, 10);
+    this.timer = new SimpleTimer(TimeUnit.MILLISECONDS, 20);
   }
   
   @After
@@ -52,14 +52,14 @@ public class SimpleTimerTest {
     this.timer.addCallback(callbackB);
     
     this.timer.start();
-    Thread.sleep(15L); 
+    Thread.sleep(29L); 
     assertEquals(1, callbackA.callCount);
     assertEquals(1, callbackB.callCount);
-    Thread.sleep(10L); 
+    Thread.sleep(20L); 
     assertEquals(2, callbackA.callCount);
     assertEquals(2, callbackB.callCount);
     this.timer.stop();
-    Thread.sleep(10L); 
+    Thread.sleep(20L); 
     assertEquals(2, callbackA.callCount);
     assertEquals(2, callbackB.callCount);
   }
