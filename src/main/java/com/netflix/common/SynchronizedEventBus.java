@@ -1,21 +1,26 @@
 package com.netflix.common;
 
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
  * A synchronized (thread-safe) event bus.
  * 
  * Allows subscribers to be registered and then notified whenever a new event is
  * posted to the bus. 
+ * 
+ * Subscriber dispatch is not ordered.
+ * 
  * @author tom
  *
  * @param <T> the type of the events this bus will accept and propagate to subscribers
  */
 public class SynchronizedEventBus<T> {
   
-  private final Set<EventSubscriber<T>> subscribers = Collections.synchronizedSet(new HashSet<EventSubscriber<T>>());
+  // Use a CopyOnWriteArraySet to store the subscribers. This ensures we don't need to
+  // synchronize access (optimizing for postEvent speed). Mutation is more expensive
+  // but that's fine because subscriber modifications are likely to be relatively rare.
+  private final Set<EventSubscriber<T>> subscribers = new CopyOnWriteArraySet<EventSubscriber<T>>();
   
   /**
    * Registers an {@link EventSubscriber} instance to receive notifications from
@@ -28,6 +33,16 @@ public class SynchronizedEventBus<T> {
    */
   public void addSubscriber(EventSubscriber<T> subscriber) {
     this.subscribers.add(subscriber);
+    
+  }
+  
+  /**
+   * Deregisters the given subscriber instance which will subsequently
+   * no longer receive notifications. 
+   * @param subscriber the subscriber
+   */
+  public void removeSubscriber(EventSubscriber<T> subscriber) {
+    this.subscribers.remove(subscriber);
   }
   
   /**
@@ -36,11 +51,8 @@ public class SynchronizedEventBus<T> {
    * @param event the event
    */
   public void postEvent(T event) {
-    // Ensure we synchronize on the Set as we are iterating.
-    synchronized (subscribers) {
-      for (EventSubscriber<T> subscriber : subscribers) {
-        subscriber.onEvent(event);
-      }      
-    }
+    for (EventSubscriber<T> subscriber : subscribers) {
+      subscriber.onEvent(event);
+    }      
   }
 }

@@ -1,16 +1,15 @@
 package com.netflix.common;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 public class SynchronizedEventBusTest {
 
-  private class FakeEvent {}
+  public class FakeEvent {}
   
-  private class FakeSubscriber implements EventSubscriber<FakeEvent> {
+  public class FakeSubscriber implements EventSubscriber<FakeEvent> {
     private int callCount = 0;
     
     @Override
@@ -53,5 +52,18 @@ public class SynchronizedEventBusTest {
     bus.addSubscriber(subA);
     bus.postEvent(new FakeEvent());    
     assertEquals(2, subA.callCount);
+  }
+  
+  @Test
+  public void testConcurrentModification() {
+    bus.addSubscriber(new FakeSubscriber());
+    bus.addSubscriber(new EventSubscriber<SynchronizedEventBusTest.FakeEvent>() {
+      
+      @Override
+      public void onEvent(FakeEvent event) {
+        bus.removeSubscriber(this);
+      }
+    });
+    bus.postEvent(new FakeEvent());
   }
 }
