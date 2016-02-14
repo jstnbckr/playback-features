@@ -10,31 +10,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class KeyLoggerPlaybackDiagnosticsTest {
-
-  private class FakeDiagnosticService extends DiagnosticService {
-    private Map<String, Integer> counts = new HashMap<String, Integer>();
-    private Map<String, Integer> rates = new HashMap<String, Integer>();
-    private Map<String, Integer> avgs = new HashMap<String, Integer>();
-
-    public FakeDiagnosticService(Timer timer, int numCompletedPeriods) {
-      super(timer, numCompletedPeriods);
-    }
-    
-    @Override
-    public int avg(String key) {
-      return avgs.get(key);
-    }
-    
-    @Override
-    public int count(String key) {
-      return counts.get(key);
-    }
-    
-    @Override
-    public int rate(String key) {
-      return rates.get(key);
-    }
-  }
   
   private KeyLoggerPlaybackDiagnostics diagnostics;
   private KeyLogger keyLogger;
