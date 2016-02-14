@@ -1,6 +1,8 @@
 package com.netflix.playback.features.model;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -82,26 +84,34 @@ public class KeyLoggerPlaybackDiagnostics extends PlaybackDiagnostics {
   }
   
   @Override
-  public synchronized void log(PlaybackRequest request) {
+  public void log(PlaybackRequest request) {
+    boolean isNewCustomer;
+    boolean isNewViewable;
+    synchronized (this) {
+      isNewCustomer = this.uniqueCustomers.add(request.getCustomerId());
+      isNewViewable = this.uniqueViewables.add(request.getViewableId()); 
+    }
+
     // Break the request down into several attribute-based keys 
     // which we'll log separately. This then allows us to 
     // perform queries against those keys later.
-    this.keyLogger.log(
-        REQUEST_KEY,
-        encodeCountryKey(request.getCountry()),
-        encodeCustomerKey(request.getCustomerId()),
-        encodeViewableKey(request.getViewableId()));
+    List<String> keys = new ArrayList<String>(6);
+    keys.add(REQUEST_KEY);
+    keys.add(encodeCountryKey(request.getCountry()));
+    keys.add(encodeCustomerKey(request.getCustomerId()));
+    keys.add(encodeViewableKey(request.getViewableId()));
     
     // If we determine that the customer or viewable have not
     // been seen before in the current period, then log a
     // key which indicates we've seen a new distinct 
     // customer/viewable.
-    if (this.uniqueCustomers.add(request.getCustomerId())) {
-      this.keyLogger.log(UNIQUE_CUSTOMER_KEY);
+    if (isNewCustomer) {
+      keys.add(UNIQUE_CUSTOMER_KEY);
     }
-    if (this.uniqueViewables.add(request.getViewableId())) {
-      this.keyLogger.log(UNIQUE_VIEWABLES_KEY);
+    if (isNewViewable) {
+      keys.add(UNIQUE_VIEWABLES_KEY);
     }      
+    this.keyLogger.log(keys.toArray(new String[keys.size()]));
   }
 
   @Override

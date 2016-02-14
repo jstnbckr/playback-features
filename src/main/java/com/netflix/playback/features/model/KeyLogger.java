@@ -13,6 +13,9 @@ import com.netflix.common.SynchronizedEventBus;
  * The KeyLogger itself imposes no opinion on the semantics
  * of what keys represent to consumers, it in effect
  * simply acts as a dumb string router.
+ * 
+ * KeyLogger uses a SynchronizedEventBus under the hood so
+ * is thread safe.
  * @author tom
  *
  */
