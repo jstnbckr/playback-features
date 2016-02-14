@@ -1,5 +1,6 @@
 package com.netflix.playback.features.model;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -15,7 +16,8 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class KeyCounter {
 
-  private final Map<String, AtomicInteger> countMap = new HashMap<String, AtomicInteger>();
+  private final Map<String, AtomicInteger> countMap = Collections.synchronizedMap(
+      new HashMap<String, AtomicInteger>());
   
   /**
    * Creates a counter for the given key if it does not already exists and 
@@ -23,15 +25,15 @@ public class KeyCounter {
    * @param key the key identifying the counter
    * @return the counter associated with the key
    */
-  private synchronized AtomicInteger ensureCounter(String key) {
-    AtomicInteger counter;
-    if (this.countMap.containsKey(key)) {
-      counter = countMap.get(key);
-    } else {
-      counter = new AtomicInteger();
-      countMap.put(key, counter);
+  private AtomicInteger ensureCounter(String key) {
+    synchronized (this.countMap) {      
+      AtomicInteger counter = countMap.get(key);
+      if (counter == null) {
+        counter = new AtomicInteger();
+        countMap.put(key, counter);
+      }
+      return counter;
     }
-    return counter;
   }
   
   /**
@@ -56,9 +58,10 @@ public class KeyCounter {
    * @param key the key
    * @return the count
    */
-  public synchronized int getCount(String key) {
-    if (this.countMap.containsKey(key)) {
-      return this.countMap.get(key).get();
+  public int getCount(String key) {
+    AtomicInteger counter = this.countMap.get(key);
+    if (counter != null) {
+      return counter.get();
     }
     return 0;
   }
@@ -68,8 +71,8 @@ public class KeyCounter {
    * into this KeyCounter. 
    * @param other
    */
-  public synchronized void addOther(KeyCounter other) {
-    synchronized (other) {
+  public void addOther(KeyCounter other) {
+    synchronized (other.countMap) {
       for (Entry<String, AtomicInteger> entry : other.countMap.entrySet()) {
         this.increment(entry.getKey(), entry.getValue().intValue());
       }      
