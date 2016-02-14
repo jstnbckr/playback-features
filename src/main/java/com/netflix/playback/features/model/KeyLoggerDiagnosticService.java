@@ -15,7 +15,6 @@ public final class KeyLoggerDiagnosticService extends DiagnosticService {
   private final KeyCounter allPeriodsCounter = new KeyCounter();
   private final Deque<KeyCounter> previousPeriodCounters = new ArrayDeque<KeyCounter>();
   private KeyCounter currentPeriodCounter = new KeyCounter();
-  private final KeyLogger keyLogger;
   
   /**
    * Instantiates the service, registering itself for timer callbacks
@@ -26,7 +25,6 @@ public final class KeyLoggerDiagnosticService extends DiagnosticService {
    */
   public KeyLoggerDiagnosticService(Timer timer, KeyLogger keyLogger) {
     super(timer, 0);
-    this.keyLogger = keyLogger;
     keyLogger.addHandler(new KeyLoggerHandler() {
       
       @Override
