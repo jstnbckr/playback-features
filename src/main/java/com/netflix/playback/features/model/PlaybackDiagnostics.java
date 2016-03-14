@@ -36,4 +36,14 @@ public abstract class PlaybackDiagnostics {
      * @return number of unique playback requests by viewable for the last completed time period
      */
     public abstract int uniqueViewableCount();
+
+    /**
+     * @return difference between last two completed periods
+     */
+    public abstract int rate();
+
+    /**
+     * @return average rate across all completed periods
+     */
+    public abstract int avgRate();
 }

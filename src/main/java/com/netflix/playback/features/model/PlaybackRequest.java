@@ -23,4 +23,8 @@ public class PlaybackRequest {
     public String getCountry() {
         return country;
     }
+
+    public String toString() {
+        return customerId + " : " + viewableId + " : " + country;
+    }
 }
