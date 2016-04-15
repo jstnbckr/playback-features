@@ -11,12 +11,6 @@ public abstract class DiagnosticService {
     
     /**
      * @param key
-     * @return total count for the last completed period 
-     */
-    public abstract int count(String key);
-    
-    /**
-     * @param key
      * @return difference between last two completed periods
      */
     public abstract int rate(String key);
