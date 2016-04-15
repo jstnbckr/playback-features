@@ -11,29 +11,19 @@ public abstract class PlaybackDiagnostics {
     public abstract void log(PlaybackRequest request);
     
     /**
-     * @return number of playback requests for the last completed time period
+     * @return rate of playback requests for the last two completed time periods
      */
-    public abstract int requestCount();
-        
-    /**
-     * @param country
-     * @return average rate of playback requests for the given country
-     */
-    public abstract int avgRateRequestsPerCountry(String country);
+    public abstract int requestRate();
     
     /**
      * @param viewableId
-     * @return number of playback requests for the given viewableId for the last completed time period
+     * @return rate of playback requests for the given viewableId for the last two completed time periods
      */
-    public abstract int requestCount(int viewableId);
+    public abstract int requestRate(int viewableId);
     
     /**
-     * @return number of unique playback requests by customer for the last completed time period
+     * @param viewableId
+     * @return average rate of playback requests for the given viewableId across all completed periods
      */
-    public abstract int uniqueCustomerCount();
-    
-    /**
-     * @return number of unique playback requests by viewable for the last completed time period
-     */
-    public abstract int uniqueViewableCount();
+    public abstract int avgRate(int viewableId);
 }
