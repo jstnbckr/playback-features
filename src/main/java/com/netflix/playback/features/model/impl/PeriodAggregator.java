@@ -24,7 +24,6 @@ public class PeriodAggregator {
 
 	// keep track of stats
 	private EvictingQueue<Integer> totalStatsQueue = EvictingQueue.create(2);
-
 	
 	// do a callback to aggregate data asynchronously
 	public void flush(ConcurrentMap<Integer, AtomicInteger> countAggregator, int currPeriod) {

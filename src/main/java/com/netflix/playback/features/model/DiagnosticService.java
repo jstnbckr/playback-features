@@ -41,7 +41,6 @@ public abstract class DiagnosticService {
      */
     public abstract int requestRate();
 
-    
     public void start() {
     	if (isTimerRunning.compareAndSet(false, true)) {
     		timer.start();

@@ -15,6 +15,4 @@ public class AggregatorPeriodCompletedCallback implements PeriodCompletedCallbac
 	public void doAction() {
 		diagnosticService.flush();
 	}
-	
-	
 }
