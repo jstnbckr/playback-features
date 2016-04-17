@@ -9,11 +9,17 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import com.netflix.playback.features.model.DiagnosticService;
 import com.netflix.playback.features.model.Timer;
-
+/**
+ *  The service maintains the instance of timer and start event of it
+ *  The service stores the log events for the current time period.
+ *  When timer is stopped the callback is invoked and the service flushes the data to aggregator 
+ *  for various calculations.
+ */
 public class DiagnosticServiceImpl extends DiagnosticService {
 
-	protected PeriodAggregator aggregator = new PeriodAggregator();
-	private ConcurrentMap<Integer, AtomicInteger> currentPeriodCount = new ConcurrentHashMap<>();
+	//store the events count for the current time period
+	private final ConcurrentMap<Integer, AtomicInteger> currentPeriodCount = new ConcurrentHashMap<>();
+	private final PeriodAggregator aggregator = new PeriodAggregator();
 	private final Lock lock = new ReentrantLock();
 	 
 	public DiagnosticServiceImpl(Timer timer, int numCompletedPeriods) {
@@ -65,7 +71,7 @@ public class DiagnosticServiceImpl extends DiagnosticService {
 	}
 
 	/**
-	 *  invoked by the callback
+	 *  invoked by the callback, flush the data to aggregator
 	 */
 	public void flush() {
 		lock.lock();

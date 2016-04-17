@@ -12,14 +12,20 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import com.google.common.collect.EvictingQueue;
 
+/**
+ * Based on various use cases, the aggregator return the data. It stores the events count for each period.
+ * 
+ */
 public class PeriodAggregator {
 
-	private ConcurrentMap<Integer, ConcurrentMap<Integer, Integer>> periodToEventCount = new ConcurrentHashMap<>();
+	private final ConcurrentMap<Integer, ConcurrentMap<Integer, Integer>> periodToEventCount 
+				= new ConcurrentHashMap<>();
 	private ExecutorService executor = Executors.newFixedThreadPool(1);
 
 	// keep track of stats
 	private EvictingQueue<Integer> totalStatsQueue = EvictingQueue.create(2);
 
+	
 	// do a callback to aggregate data asynchronously
 	public void flush(ConcurrentMap<Integer, AtomicInteger> countAggregator, int currPeriod) {
 		FutureTask task = new FutureTask<>(new StatsCallable(countAggregator, currPeriod));
@@ -41,7 +47,7 @@ public class PeriodAggregator {
 		}
 		return sum / 2;
 	}
-	
+
 	public Optional<Integer> getRateForPeriod(int key, int period) {
 		return Optional.ofNullable(periodToEventCount.get(period).get(key));
 	}
