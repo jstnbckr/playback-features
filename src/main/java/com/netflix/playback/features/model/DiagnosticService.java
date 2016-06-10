@@ -14,10 +14,4 @@ public abstract class DiagnosticService {
      * @return difference between last two completed periods
      */
     public abstract int rate(String key);
-    
-    /**
-     * @param key
-     * @return average rate across all completed periods 
-     */
-    public abstract int avg(String key);
 }

@@ -3,10 +3,10 @@ package com.netflix.playback.features.model;
 public class PlaybackRequest {
     
     private String customerId;
-    private int viewableId;
+    private String viewableId;
     private String country;
     
-    public PlaybackRequest(String customerId, int viewableId, String country) {
+    public PlaybackRequest(String customerId, String viewableId, String country) {
         this.customerId = customerId;
         this.viewableId = viewableId;
         this.country = country;
@@ -16,7 +16,7 @@ public class PlaybackRequest {
         return customerId;
     }
 
-    public int getViewableId() {
+    public String getViewableId() {
         return viewableId;
     }
 
