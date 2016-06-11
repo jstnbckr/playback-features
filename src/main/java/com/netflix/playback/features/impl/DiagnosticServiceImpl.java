@@ -1,14 +1,10 @@
 package com.netflix.playback.features.impl;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.netflix.playback.features.model.DiagnosticService;
+import com.netflix.playback.features.model.RequestsInLastThreePeriods;
 import com.netflix.playback.features.model.Timer;
 
 /**
@@ -16,39 +12,23 @@ import com.netflix.playback.features.model.Timer;
  */
 public class DiagnosticServiceImpl extends DiagnosticService {
 
-    private static Logger logger = LoggerFactory.getLogger(DiagnosticServiceImpl.class);
-
-    private Map<String, AtomicInteger> requestsInLastPeriod;
-
-    private Map<String, AtomicInteger> requestsInSecondLastPeriod;
-
-    private Map<String, AtomicInteger> requestsInThirdFromLastPeriod;
+    private volatile RequestsInLastThreePeriods requestsInLastThreePeriods;
 
     public DiagnosticServiceImpl(Timer timer, int numCompletedPeriods) {
         super(timer, numCompletedPeriods);
+        this.requestsInLastThreePeriods = new RequestsInLastThreePeriods();
         this.timer.addCallback(new DiagnosticServiceCallback(this));
-        this.requestsInLastPeriod = new ConcurrentHashMap<>();
-        this.requestsInSecondLastPeriod = new HashMap<>();
-        this.requestsInThirdFromLastPeriod = new HashMap<>();
         this.timer.start();
     }
 
     @Override
     public void log(String key) {
-        logger.info("key {} {}", key,
-                this.requestsInLastPeriod.computeIfAbsent(key, k -> new AtomicInteger(0))
-                        .incrementAndGet());
+        this.requestsInLastThreePeriods.log(key);
     }
 
     @Override
-    public synchronized int rate(String key) {
-        int secondLast = this.requestsInSecondLastPeriod
-                .computeIfAbsent(key, k -> new AtomicInteger(0)).get();
-        int thirdFromLast = this.requestsInThirdFromLastPeriod
-                .computeIfAbsent(key, k -> new AtomicInteger(0))
-                .get();
-        logger.info("{} secondLast {} thirdFromLast {}", key, secondLast, thirdFromLast);
-        return secondLast - thirdFromLast;
+    public int rate(String key) {
+        return this.requestsInLastThreePeriods.rate(key);
     }
 
     @Override
@@ -58,11 +38,8 @@ public class DiagnosticServiceImpl extends DiagnosticService {
     }
 
     public int incrementNumCompletedPeriods() {
-        synchronized (this) {
-            this.requestsInThirdFromLastPeriod = requestsInSecondLastPeriod;
-            this.requestsInSecondLastPeriod = requestsInLastPeriod;
-        }
-        this.requestsInLastPeriod = new ConcurrentHashMap<>();
+        this.requestsInLastThreePeriods = new RequestsInLastThreePeriods(
+                this.requestsInLastThreePeriods);
         return ++this.numCompletedPeriods;
     }
 
