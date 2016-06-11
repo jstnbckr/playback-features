@@ -22,7 +22,7 @@ public class PlaybackDiagnosticsImplTest {
 
     private static Logger logger = LoggerFactory.getLogger(TimerImplTest.class);
 
-    private int periodLength = 3;
+    private int periodLength = 100;
 
     private TimerImpl timer;
 
@@ -37,7 +37,7 @@ public class PlaybackDiagnosticsImplTest {
     @Before
     public void setUp() throws Exception {
         this.latch = new CountDownLatch[] { new CountDownLatch(1) };
-        this.timer = new TimerImpl(TimeUnit.SECONDS, this.periodLength);
+        this.timer = new TimerImpl(TimeUnit.MILLISECONDS, this.periodLength);
         this.timer.addCallback(new PeriodCompletedCallback() {
             @Override
             public void doAction() {

@@ -24,7 +24,7 @@ public class TimerImplTest {
 
     @Before
     public void setUp() throws Exception {
-        this.timer = new TimerImpl(TimeUnit.SECONDS, 3);
+        this.timer = new TimerImpl(TimeUnit.MILLISECONDS, 30);
         this.count = 0;
         this.timer.addCallback(new PeriodCompletedCallback() {
             @Override
@@ -37,9 +37,9 @@ public class TimerImplTest {
     @Test
     public void testStartAndStop() throws Exception {
         this.timer.start();
-        Thread.sleep(10 * 1000);
+        Thread.sleep(70);
         this.timer.stop();
-        assertEquals(this.count, 3);
+        assertEquals(this.count, 2);
     }
 
 }
