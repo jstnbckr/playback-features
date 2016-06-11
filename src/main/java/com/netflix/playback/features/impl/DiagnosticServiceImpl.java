@@ -1,8 +1,5 @@
 package com.netflix.playback.features.impl;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.netflix.playback.features.model.DiagnosticService;
 import com.netflix.playback.features.model.RequestsInLastThreePeriods;
 import com.netflix.playback.features.model.Timer;
