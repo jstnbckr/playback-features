@@ -2,7 +2,6 @@ package com.netflix.playback.features.model;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,11 +10,11 @@ public class RequestsInLastThreePeriods {
 
     private static Logger logger = LoggerFactory.getLogger(RequestsInLastThreePeriods.class);
 
-    private Map<String, AtomicInteger> requestsInLastPeriod;
+    private Map<String, Integer> requestsInLastPeriod;
 
-    private Map<String, AtomicInteger> requestsInSecondLastPeriod;
+    private Map<String, Integer> requestsInSecondLastPeriod;
 
-    private Map<String, AtomicInteger> requestsInThirdFromLastPeriod;
+    private Map<String, Integer> requestsInThirdFromLastPeriod;
 
     public RequestsInLastThreePeriods() {
         this.requestsInLastPeriod = new HashMap<>();
@@ -31,17 +30,16 @@ public class RequestsInLastThreePeriods {
 
     public int rate(String key) {
         int secondLast = this.requestsInSecondLastPeriod
-                .computeIfAbsent(key, k -> new AtomicInteger(0)).get();
+                .computeIfAbsent(key, k -> 0);
         int thirdFromLast = this.requestsInThirdFromLastPeriod
-                .computeIfAbsent(key, k -> new AtomicInteger(0))
-                .get();
+                .computeIfAbsent(key, k -> 0);
         logger.info("{} secondLast {} thirdFromLast {}", key, secondLast, thirdFromLast);
         return secondLast - thirdFromLast;
     }
 
     public synchronized void log(String key) {
-        logger.info("key {} {}", key,
-                this.requestsInLastPeriod.computeIfAbsent(key, k -> new AtomicInteger(0))
-                        .incrementAndGet());
+        int count = this.requestsInLastPeriod.computeIfAbsent(key, k -> 0) + 1;
+        this.requestsInLastPeriod.put(key, count);
+        logger.info("key {} count {}", key, count);
     }
 }
