@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import com.netflix.playback.features.model.DiagnosticService;
 import com.netflix.playback.features.model.PlaybackDiagnostics;
 import com.netflix.playback.features.model.PlaybackRequest;
+import com.netflix.playback.features.utils.ValidationUtils;
 
 public class PlaybackDiagnosticsImpl extends PlaybackDiagnostics {
 
@@ -18,8 +19,8 @@ public class PlaybackDiagnosticsImpl extends PlaybackDiagnostics {
     @Override
     public void log(PlaybackRequest request) {
         logger.info("request {}", request);
-        this.diagnosticService.log(request.getCountry());
-        this.diagnosticService.log(request.getViewableId());
+        this.diagnosticService.log(ValidationUtils.validateCountryKey(request.getCountry()));
+        this.diagnosticService.log(ValidationUtils.validateViewableId(request.getViewableId()));
     }
 
     @Override
