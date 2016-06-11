@@ -2,7 +2,6 @@ package com.netflix.playback.features.model;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.slf4j.Logger;
@@ -19,7 +18,7 @@ public class RequestsInLastThreePeriods {
     private Map<String, AtomicInteger> requestsInThirdFromLastPeriod;
 
     public RequestsInLastThreePeriods() {
-        this.requestsInLastPeriod = new ConcurrentHashMap<>();
+        this.requestsInLastPeriod = new HashMap<>();
         this.requestsInSecondLastPeriod = new HashMap<>();
         this.requestsInThirdFromLastPeriod = new HashMap<>();
     }
@@ -27,7 +26,7 @@ public class RequestsInLastThreePeriods {
     public RequestsInLastThreePeriods(RequestsInLastThreePeriods oldRequests) {
         this.requestsInThirdFromLastPeriod = oldRequests.requestsInSecondLastPeriod;
         this.requestsInSecondLastPeriod = oldRequests.requestsInLastPeriod;
-        this.requestsInLastPeriod = new ConcurrentHashMap<>();
+        this.requestsInLastPeriod = new HashMap<>();
     }
 
     public int rate(String key) {
@@ -40,7 +39,7 @@ public class RequestsInLastThreePeriods {
         return secondLast - thirdFromLast;
     }
 
-    public void log(String key) {
+    public synchronized void log(String key) {
         logger.info("key {} {}", key,
                 this.requestsInLastPeriod.computeIfAbsent(key, k -> new AtomicInteger(0))
                         .incrementAndGet());
