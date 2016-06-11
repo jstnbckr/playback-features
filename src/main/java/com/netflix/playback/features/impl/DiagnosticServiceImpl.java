@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.netflix.playback.features.model.DiagnosticService;
-import com.netflix.playback.features.model.PlaybackRequest;
 import com.netflix.playback.features.model.Timer;
 
 /**
@@ -35,14 +34,9 @@ public class DiagnosticServiceImpl extends DiagnosticService {
     }
 
     @Override
-    public void log(PlaybackRequest request) {
-        logger.info("viewableId {} {}", request.getViewableId(),
-                this.requestsInLastPeriod
-                        .computeIfAbsent(request.getViewableId(), k -> new AtomicInteger(0))
-                        .incrementAndGet());
-        logger.info("Country {} {}", request.getCountry(),
-                this.requestsInLastPeriod
-                        .computeIfAbsent(request.getCountry(), k -> new AtomicInteger(0))
+    public void log(String key) {
+        logger.info("key {} {}", key,
+                this.requestsInLastPeriod.computeIfAbsent(key, k -> new AtomicInteger(0))
                         .incrementAndGet());
     }
 

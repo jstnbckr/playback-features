@@ -18,7 +18,8 @@ public class PlaybackDiagnosticsImpl extends PlaybackDiagnostics {
     @Override
     public void log(PlaybackRequest request) {
         logger.info("request {}", request);
-        this.diagnosticService.log(request);
+        this.diagnosticService.log(request.getCountry());
+        this.diagnosticService.log(request.getViewableId());
     }
 
     @Override

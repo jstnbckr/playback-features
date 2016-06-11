@@ -16,5 +16,5 @@ public abstract class DiagnosticService {
      */
     public abstract int rate(String key);
 
-    public abstract void log(PlaybackRequest request);
+    public abstract void log(String key);
 }
