@@ -1,7 +1,7 @@
 package com.netflix.playback.features.impl;
 
 import com.netflix.playback.features.model.DiagnosticService;
-import com.netflix.playback.features.model.RequestsInLastThreePeriods;
+import com.netflix.playback.features.model.RequestHistory;
 import com.netflix.playback.features.model.Timer;
 
 /**
@@ -9,23 +9,23 @@ import com.netflix.playback.features.model.Timer;
  */
 public class DiagnosticServiceImpl extends DiagnosticService {
 
-    private volatile RequestsInLastThreePeriods requestsInLastThreePeriods;
+    private volatile RequestHistory requestHistory;
 
     public DiagnosticServiceImpl(Timer timer, int numCompletedPeriods) {
         super(timer, numCompletedPeriods);
-        this.requestsInLastThreePeriods = new RequestsInLastThreePeriods();
+        this.requestHistory = new RequestHistory();
         this.timer.addCallback(new DiagnosticServiceCallback(this));
         this.timer.start();
     }
 
     @Override
     public void log(String key) {
-        this.requestsInLastThreePeriods.log(key);
+        this.requestHistory.log(key);
     }
 
     @Override
     public int rate(String key) {
-        return this.requestsInLastThreePeriods.rate(key);
+        return this.requestHistory.rate(key);
     }
 
     @Override
@@ -35,8 +35,8 @@ public class DiagnosticServiceImpl extends DiagnosticService {
     }
 
     public int incrementNumCompletedPeriods() {
-        this.requestsInLastThreePeriods = new RequestsInLastThreePeriods(
-                this.requestsInLastThreePeriods);
+        this.requestHistory = new RequestHistory(
+                this.requestHistory);
         return ++this.numCompletedPeriods;
     }
 
