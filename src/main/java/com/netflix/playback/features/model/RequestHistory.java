@@ -14,10 +14,7 @@ public class RequestHistory {
 
     private final Request[] requests;
 
-    private int index;
-
     public RequestHistory() {
-        this.index = 0;
         this.requests = new Request[REQUEST_HISTORY_SIZE];
         for (int i = 0; i < REQUEST_HISTORY_SIZE; i++) {
             this.requests[i] = new Request();
@@ -26,11 +23,10 @@ public class RequestHistory {
 
     public RequestHistory(RequestHistory oldRequestHistory) {
         this.requests = new Request[REQUEST_HISTORY_SIZE];
-        for (int i = 0; i < REQUEST_HISTORY_SIZE; i++) {
-            this.requests[i] = oldRequestHistory.getRequests()[i];
+        for (int i = 0; i < REQUEST_HISTORY_SIZE - 1; i++) {
+            this.requests[i] = oldRequestHistory.getRequests()[i + 1];
         }
-        this.index = (oldRequestHistory.getIndex() + 1) % REQUEST_HISTORY_SIZE;
-        this.newRequestsInLastPeriod();
+        this.requests[REQUEST_HISTORY_SIZE - 1] = new Request();
     }
 
     public int rate(String key) {
@@ -48,28 +44,20 @@ public class RequestHistory {
         logger.info("key {} count {}", key, count);
     }
 
-    private int getIndex() {
-        return this.index;
-    }
-
     private Request[] getRequests() {
         return this.requests;
     }
 
-    private void newRequestsInLastPeriod() {
-        this.requests[(this.index + 2) % REQUEST_HISTORY_SIZE] = new Request();
-    }
-
     private Map<String, Integer> getRequestsInLastPeriod() {
-        return this.requests[(this.index + 2) % REQUEST_HISTORY_SIZE].getStat();
+        return this.requests[REQUEST_HISTORY_SIZE - 1].getStat();
     }
 
     private Map<String, Integer> getRequestsInSecondLastPeriod() {
-        return this.requests[(this.index + 1) % REQUEST_HISTORY_SIZE].getStat();
+        return this.requests[REQUEST_HISTORY_SIZE - 2].getStat();
     }
 
     private Map<String, Integer> getRequestsInThirdFromLastPeriod() {
-        return this.requests[this.index % REQUEST_HISTORY_SIZE].getStat();
+        return this.requests[REQUEST_HISTORY_SIZE - 3].getStat();
     }
 
     private static class Request {
